@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://badge.fury.io/js/@melloware%2Fcoloris.svg)](https://badge.fury.io/js/@melloware%2Fcoloris)
+![Maven](https://img.shields.io/maven-central/v/org.webjars.npm/melloware__coloris)
 
 # Coloris NPM
 
@@ -75,6 +78,18 @@ requirejs(['@melloware/coloris'], function (Coloris) {
     el: "#coloris",
   });
 });
+```
+
+### Java / Maven
+
+The colorpicker can also be downloaded as a Java JAR for use in Java web applicatons:
+
+```xml
+<dependency>
+   <groupId>org.webjars.npm</groupId>
+   <artifactId>melloware__coloris</artifactId>
+   <version>0.6.0</version>
+</dependency>
 ```
 
 ### Options
