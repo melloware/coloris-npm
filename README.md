@@ -229,12 +229,12 @@ Coloris({
 
 Clone the git repo:
 ```bash
-git clone git@github.com:melloware/Coloris.git
+git clone git@github.com:melloware/coloris-npm.git
 ```
 
 Enter the Coloris directory and install the development dependencies:
 ```bash
-cd Coloris && npm install
+cd coloris-npm && npm install
 ```
 
 Run the build script:
