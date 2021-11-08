@@ -144,6 +144,15 @@ export interface ColorisOptions {
   format?: ColorFormat;
 
   /**
+   * Set to true to enable format toggle buttons in the color picker dialog.
+   *
+   * This will also force the format to auto.
+   *
+   * @default true
+   */
+  formatToggle?: boolean;
+
+  /**
    * Enable or disable alpha support.
    *
    * When disabled, it will strip the alpha value from the existing color
