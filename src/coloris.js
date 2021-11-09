@@ -8,7 +8,7 @@ return ((window, document, Math) => {
   const ctx = document.createElement('canvas').getContext('2d');
   const currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0, a: 1 };
   let picker, colorArea, colorAreaDims, colorMarker, colorPreview, colorValue, clearButton,
-      hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor; 
+      hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor;
 
   // Default settings
   const settings = {
@@ -108,7 +108,7 @@ return ((window, document, Math) => {
 
           if (options.clearButton.label) {
             clearButton.innerHTML = options.clearButton.label;
-          }          
+          }
 
           clearButton.style.display = display;
           break;
@@ -149,7 +149,8 @@ return ((window, document, Math) => {
     // Show the color picker on click on the input fields that match the selector
     addListener(document, 'click', selector, event => {
       const parent = settings.parent;
-      const coords = event.target.getBoundingClientRect();
+      // When input is of type hidden the bounding client rect is always 0
+      const coords = event.target.type === 'hidden' ? event.target.parent.getBoundingClientRect() : event.target.getBoundingClientRect();
       const scrollY = window.scrollY;
       let reposition = { left: false, top: false };
       let offset = { x: 0, y: 0 };
@@ -281,7 +282,7 @@ return ((window, document, Math) => {
 
     updateMarkerA11yLabel(hsva.s, hsva.v);
     updateColor(rgba, hsva);
-    
+
     // Update the UI
     hueSlider.value = hsva.h;
     picker.style.color = `hsl(${hsva.h}, 100%, 50%)`;
@@ -354,7 +355,7 @@ return ((window, document, Math) => {
     colorMarker.setAttribute('aria-label', label);
   }
 
-  // 
+  //
   /**
    * Get the pageX and pageY positions of the pointer.
    * @param {object} event The MouseEvent or TouchEvent object.
@@ -526,7 +527,7 @@ return ((window, document, Math) => {
     const value = hsva.v / 100;
     const lightness = value * (1 - (hsva.s / 100) / 2);
     let saturation;
-    
+
     if (lightness > 0 && lightness < 1) {
       saturation = Math.round((value - lightness) / Math.min(lightness, 1 - lightness) * 100);
     }
@@ -584,7 +585,7 @@ return ((window, document, Math) => {
     // Default to black for invalid color strings
     ctx.fillStyle = '#000';
 
-    // Use canvas to convert the string to a valid color string 
+    // Use canvas to convert the string to a valid color string
     ctx.fillStyle = str;
     match = regex.exec(ctx.fillStyle);
 
@@ -672,7 +673,7 @@ return ((window, document, Math) => {
 
   /**
    * Init the color picker.
-   */ 
+   */
   function init() {
     // Render the UI
     picker = document.createElement('div');
@@ -823,7 +824,7 @@ return ((window, document, Math) => {
    * Shortcut for getElementById to optimize the minified JS.
    * @param {string} id The element id.
    * @return {object} The DOM element with the provided id.
-   */ 
+   */
   function getEl(id) {
     return document.getElementById(id);
   }
@@ -834,7 +835,7 @@ return ((window, document, Math) => {
    * @param {string} type Event type.
    * @param {(string|function)} selector Event target if delegation is used, event handler if not.
    * @param {function} [fn] Event handler if delegation is used.
-   */ 
+   */
   function addListener(context, type, selector, fn) {
     const matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
 
@@ -858,10 +859,10 @@ return ((window, document, Math) => {
    * Call a function only when the DOM is ready.
    * @param {function} fn The function to call.
    * @param {array} args Arguments to pass to the function.
-   */ 
+   */
   function DOMReady(fn, args) {
     args = args !== undefined ? args : [];
-     
+
     if (document.readyState !== 'loading') {
       fn(...args);
     } else {
