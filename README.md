@@ -53,7 +53,7 @@ That's it. All done!
 
 ### NPM
 
-You can also download the color picker from NPM
+You can also download the color picker from NPM:
 
 ```bash
 # using NPM
@@ -202,7 +202,7 @@ Coloris.close();
 Coloris.close(true);
 ```
 
-# TypeScript
+## TypeScript
 
 This package includes TypeScript declarations. When you use it in a module
 environment, just import it:
