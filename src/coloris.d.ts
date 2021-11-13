@@ -3,14 +3,19 @@
  * All color themes supported by the color picker. More themes might be added
  * in the future.
  */
-export type ColorTheme =
+export type Theme =
+  | "default"
+  | "large"
+  | "polaroid";
+
+/**
+ * All theme modes.
+ */
+export type ThemeMode =
   | "light"
   | "dark"
-  | "large"
-  | "large-dark"
-  | "polaroid"
-  | "polaroid-dark";
-
+  | "auto";
+    
 /**
  * Color format used by the color picker. The format affects which value is
  * shown in the input field.
@@ -127,9 +132,9 @@ export interface ColorisOptions {
    * The color theme to use for the color picker. More themes might be added
    * in the future. Available themes: default, large, polaroid.
    *
-   * @default "light"
+   * @default "default"
    */
-  theme?: ColorTheme;
+  theme?: Theme;
   
   /**
    * Set the theme to light or dark mode:
@@ -137,9 +142,9 @@ export interface ColorisOptions {
    *  - dark: dark mode.
    *  - auto: automatically enables dark mode when the user prefers a dark color scheme.
    *
-   * @default "auto"
+   * @default "light"
    */
-  themeMode?: string,
+  themeMode?: ThemeMode,
 
   /**
    * The margin in pixels between the input fields and the color picker's
