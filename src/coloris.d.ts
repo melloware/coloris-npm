@@ -59,6 +59,11 @@ export interface Accessibility {
    */
   input: string;
 
+   /**
+   * @default "Color format"
+   */
+  format: string;
+
   /**
    * @default "Color swatch"
    */
@@ -95,12 +100,11 @@ export interface ColorisOptions {
   /**
    * CSS selector for the parent.
    *
-   * When `null`, the default behaviour is to append the color picker's dialog
-   * to the end of the document's body. But it is possible to append it to a
-   * custom parent instead. This is especially useful if the color fields are
-   * in a scrollable container and you want color picker' dialog to stay
-   * anchored to them. You will need to set the position of the container to
-   * relative or absolute.
+   * The default behavior is to append the color picker's dialog to the end of the document's
+   * body. but it is possible to append it to a custom parent instead. This is especially useful
+   * if the color fields are in a scrollable container and you want color picker' dialog to stay
+   * anchored to them. You will need to set the position of the container to relative or absolute.
+   * Note: This should be a scrollable container with enough space to display the picker.
    *
    * @default null
    */
@@ -121,11 +125,21 @@ export interface ColorisOptions {
 
   /**
    * The color theme to use for the color picker. More themes might be added
-   * in the future.
+   * in the future. Available themes: default, large, polaroid.
    *
    * @default "light"
    */
   theme?: ColorTheme;
+  
+  /**
+   * Set the theme to light or dark mode:
+   *  - light: light mode.
+   *  - dark: dark mode.
+   *  - auto: automatically enables dark mode when the user prefers a dark color scheme.
+   *
+   * @default "auto"
+   */
+  themeMode?: string,
 
   /**
    * The margin in pixels between the input fields and the color picker's

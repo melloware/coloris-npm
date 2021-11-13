@@ -4,17 +4,18 @@
  * https://github.com/mdbassit/Coloris
  */
 
-return ((window, document, Math) => {
+((window, document, Math) => {
   const ctx = document.createElement('canvas').getContext('2d');
   const currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0, a: 1 };
   let picker, colorArea, colorAreaDims, colorMarker, colorPreview, colorValue, clearButton,
-      hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor; 
+      hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor;
 
   // Default settings
   const settings = {
     el: '[data-coloris]',
     parent: null,
-    theme: 'light',
+    theme: 'default',
+    themeMode: 'light',
     wrap: true,
     margin: 2,
     format: 'hex',
@@ -61,8 +62,17 @@ return ((window, document, Math) => {
             settings.parent.appendChild(picker);
           }
           break;
+        case 'themeMode':
+          settings.themeMode = options.themeMode;
+          if (options.themeMode === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            settings.themeMode = 'dark';
+          }
+          // The lack of a break statement is intentional
         case 'theme':
-          picker.className = `clr-picker clr-${options.theme.split('-').join(' clr-')}`;
+          if (options.theme) {
+            settings.theme = options.theme;
+          }
+          picker.className = `clr-picker clr-${settings.theme} clr-${settings.themeMode}`;
           break;
         case 'margin':
           options.margin *= 1;
@@ -108,7 +118,7 @@ return ((window, document, Math) => {
 
           if (options.clearButton.label) {
             clearButton.innerHTML = options.clearButton.label;
-          }          
+          }
 
           clearButton.style.display = display;
           break;
@@ -154,7 +164,7 @@ return ((window, document, Math) => {
       let reposition = { left: false, top: false };
       let offset = { x: 0, y: 0 };
       let left = coords.x;
-      let top =  scrollY + coords.y + coords.height + settings.margin;
+      let top = scrollY + coords.y + coords.height + settings.margin;
 
       currentEl = event.target;
       oldColor = currentEl.value;
@@ -281,7 +291,7 @@ return ((window, document, Math) => {
 
     updateMarkerA11yLabel(hsva.s, hsva.v);
     updateColor(rgba, hsva);
-    
+
     // Update the UI
     hueSlider.value = hsva.h;
     picker.style.color = `hsl(${hsva.h}, 100%, 50%)`;
@@ -315,7 +325,7 @@ return ((window, document, Math) => {
    */
   function pickColor(color) {
     if (currentEl) {
-      currentEl.value = color !== undefined ? color : colorValue.value;
+      currentEl.value = color || colorValue.value;
       currentEl.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
@@ -354,7 +364,7 @@ return ((window, document, Math) => {
     colorMarker.setAttribute('aria-label', label);
   }
 
-  // 
+  //
   /**
    * Get the pageX and pageY positions of the pointer.
    * @param {object} event The MouseEvent or TouchEvent object.
@@ -502,7 +512,6 @@ return ((window, document, Math) => {
 
     chroma = (chroma + m);
     x = (x + m);
-    m = m;
 
     const index = Math.floor(hueBy60) % 6;
     const red = [chroma, x, m, m, x, chroma][index];
@@ -514,7 +523,7 @@ return ((window, document, Math) => {
       g: Math.round(green * 255),
       b: Math.round(blue * 255),
       a: hsva.a
-    }
+    };
   }
 
   /**
@@ -526,7 +535,7 @@ return ((window, document, Math) => {
     const value = hsva.v / 100;
     const lightness = value * (1 - (hsva.s / 100) / 2);
     let saturation;
-    
+
     if (lightness > 0 && lightness < 1) {
       saturation = Math.round((value - lightness) / Math.min(lightness, 1 - lightness) * 100);
     }
@@ -536,7 +545,7 @@ return ((window, document, Math) => {
       s: saturation || 0,
       l: Math.round(lightness * 100),
       a: hsva.a
-    }
+    };
   }
 
   /**
@@ -569,7 +578,7 @@ return ((window, document, Math) => {
       s: Math.round(saturation * 100),
       v: Math.round(value * 100),
       a: rgba.a
-    }
+    };
   }
 
   /**
@@ -584,7 +593,7 @@ return ((window, document, Math) => {
     // Default to black for invalid color strings
     ctx.fillStyle = '#000';
 
-    // Use canvas to convert the string to a valid color string 
+    // Use canvas to convert the string to a valid color string
     ctx.fillStyle = str;
     match = regex.exec(ctx.fillStyle);
 
@@ -672,7 +681,7 @@ return ((window, document, Math) => {
 
   /**
    * Init the color picker.
-   */ 
+   */
   function init() {
     // Render the UI
     picker = document.createElement('div');
@@ -738,7 +747,7 @@ return ((window, document, Math) => {
     });
 
     addListener(colorArea, 'touchstart', event => {
-      document.addEventListener('touchmove', moveMarker, { passive: false })
+      document.addEventListener('touchmove', moveMarker, { passive: false });
     });
 
     addListener(colorMarker, 'mousedown', event => {
@@ -746,7 +755,7 @@ return ((window, document, Math) => {
     });
 
     addListener(colorMarker, 'touchstart', event => {
-      document.addEventListener('touchmove', moveMarker, { passive: false })
+      document.addEventListener('touchmove', moveMarker, { passive: false });
     });
 
     addListener(colorValue, 'change', event => {
@@ -823,7 +832,7 @@ return ((window, document, Math) => {
    * Shortcut for getElementById to optimize the minified JS.
    * @param {string} id The element id.
    * @return {object} The DOM element with the provided id.
-   */ 
+   */
   function getEl(id) {
     return document.getElementById(id);
   }
@@ -834,7 +843,7 @@ return ((window, document, Math) => {
    * @param {string} type Event type.
    * @param {(string|function)} selector Event target if delegation is used, event handler if not.
    * @param {function} [fn] Event handler if delegation is used.
-   */ 
+   */
   function addListener(context, type, selector, fn) {
     const matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
 
@@ -858,10 +867,10 @@ return ((window, document, Math) => {
    * Call a function only when the DOM is ready.
    * @param {function} fn The function to call.
    * @param {array} args Arguments to pass to the function.
-   */ 
+   */
   function DOMReady(fn, args) {
     args = args !== undefined ? args : [];
-     
+
     if (document.readyState !== 'loading') {
       fn(...args);
     } else {
@@ -883,7 +892,7 @@ return ((window, document, Math) => {
       set: configure,
       wrap: wrapFields,
       close: closePicker
-    }
+    };
 
     function Coloris(options) {
       DOMReady(() => {
