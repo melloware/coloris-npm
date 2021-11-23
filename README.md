@@ -4,6 +4,9 @@
 
 # Coloris NPM
 
+A lightweight and elegant JavaScript color picker written in vanilla ES6.  
+Convert any text input field into a color field.
+
 Forked from https://github.com/mdbassit/Coloris so we could provide TypeScript and NPM support. Head over to Momo Bassit's original repo for user documentation.
 
 ## NPM
