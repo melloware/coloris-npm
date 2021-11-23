@@ -15,7 +15,7 @@ exports.removeDir = async (dir) => {
  * @param {string[]} args
  * @param {string} cwd
  */
-exports.spawnSimple = async (command, args, cwd) => {
+async function spawnSimple(command, args, cwd) {
   const { error, status } = cp.spawnSync(command, args, {
     stdio: ["inherit", "inherit", "inherit"],
     cwd: cwd,
@@ -25,11 +25,27 @@ exports.spawnSimple = async (command, args, cwd) => {
 }
 
 /**
+ * @param {string[]} args
+ * @param {string} cwd
+ */
+async function spawnNpm(args, cwd) {
+  try {
+    await spawnSimple("npm", args, cwd);
+  }
+  catch (e) {
+    if (e.code === "ENOENT") {
+      console.info("npm not found, using npm.cmd");
+      await spawnSimple("npm.cmd", args, cwd);
+    }
+  }
+}
+
+/**
  * @param {typeof import("jsdom")} jsdom
  * @param {string} file
  * @returns {Promise<{dom: import("jsdom").JSDOM, virtualConsole: import("jsdom").VirtualConsole}>}
  */
-exports.loadHtml = async (jsdom, file) => {
+async function loadHtml(jsdom, file) {
   const { JSDOM, VirtualConsole } = jsdom;
 
   /** @type {Error[]} */
@@ -90,3 +106,7 @@ exports.loadHtml = async (jsdom, file) => {
     });
   });
 }
+
+exports.spawnSimple = spawnSimple;
+exports.spawnNpm = spawnNpm;
+exports.loadHtml = loadHtml;
