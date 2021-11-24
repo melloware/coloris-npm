@@ -81,14 +81,16 @@ Coloris({
 
 ## Building from source
 
+First of all, again, please note that this is a fork of the original repo!
+
 Clone the git repo:
 ```bash
-git clone git@github.com:mdbassit/Coloris.git
+git clone git@github.com:melloware/coloris-npm
 ```
 
 Enter the Coloris directory and install the development dependencies:
 ```bash
-cd Coloris && npm install
+cd coloris-npm && npm install
 ```
 
 Run the build script:
