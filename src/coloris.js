@@ -22,6 +22,7 @@ return ((window, document, Math) => {
     formatToggle : false,
     swatches: [],
     alpha: true,
+    focusInput: true,
     clearButton: {
       show: false,
       label: 'Clear'
@@ -147,6 +148,8 @@ return ((window, document, Math) => {
             colorValue.setAttribute('aria-label', settings.a11y.input);
             colorArea.setAttribute('aria-label', settings.a11y.instruction);
           }
+        default:
+          settings[key] = options[key];
       }
     }
   }
@@ -223,7 +226,10 @@ return ((window, document, Math) => {
       };
 
       setColorFromStr(oldColor);
-      colorValue.focus({ preventScroll: true });
+
+      if (settings.focusInput) {
+        colorValue.focus({ preventScroll: true });
+      }
     });
 
     // Update the color preview of the input fields that match the selector
@@ -276,7 +282,11 @@ return ((window, document, Math) => {
       }
 
       picker.classList.remove('clr-open');
-      currentEl.focus({ preventScroll: true });
+
+      if (settings.focusInput) {
+        currentEl.focus({ preventScroll: true });
+      }
+      
       currentEl = null;
     }
   }
@@ -866,7 +876,7 @@ return ((window, document, Math) => {
   /**
    * Call a function only when the DOM is ready.
    * @param {function} fn The function to call.
-   * @param {array} args Arguments to pass to the function.
+   * @param {array} [args] Arguments to pass to the function.
    */
   function DOMReady(fn, args) {
     args = args !== undefined ? args : [];

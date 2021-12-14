@@ -172,6 +172,13 @@ export interface ColorisOptions {
   formatToggle?: boolean;
 
   /**
+   * Focus the color value input when the color picker dialog is opened.
+   *
+   * @default true
+   */
+  focusInput?: boolean;
+
+  /**
    * Enable or disable alpha support.
    *
    * When disabled, it will strip the alpha value from the existing color
