@@ -20,10 +20,11 @@ return ((window, document, Math) => {
     margin: 2,
     format: 'hex',
     formatToggle : false,
-    swatchesOnly: false,
     swatches: [],
+    swatchesOnly: false,
     alpha: true,
     focusInput: true,
+    autoClose: false,
     clearButton: {
       show: false,
       label: 'Clear'
@@ -84,9 +85,6 @@ return ((window, document, Math) => {
           if (options.el && options.wrap) {
             wrapFields(options.el);
           }
-          break;
-        case 'format':
-          settings.format = options.format;
           break;
         case 'formatToggle':
           getEl('clr-format').style.display = options.formatToggle ? 'block' : 'none';
@@ -801,6 +799,10 @@ return ((window, document, Math) => {
     addListener(picker, 'click', '.clr-swatches button', event => {
       setColorFromStr(event.target.textContent);
       pickColor();
+
+      if (settings.autoClose) {
+        closePicker();
+      }
     });
 
     addListener(document, 'mouseup', event => {
