@@ -20,6 +20,7 @@ return ((window, document, Math) => {
     margin: 2,
     format: 'hex',
     formatToggle : false,
+    swatchesOnly: false,
     swatches: [],
     alpha: true,
     focusInput: true,
@@ -104,6 +105,14 @@ return ((window, document, Math) => {
             if (swatches.length) {
               getEl('clr-swatches').innerHTML = `<div>${swatches.join('')}</div>`;
             }
+          }
+          break;
+        case 'swatchesOnly':
+          settings.swatchesOnly = !!options.swatchesOnly;
+          picker.setAttribute('data-minimal', settings.swatchesOnly);
+
+          if (settings.swatchesOnly) {
+            settings.autoClose = true;
           }
           break;
         case 'alpha':

@@ -179,6 +179,13 @@ export interface ColorisOptions {
   focusInput?: boolean;
 
   /**
+   * Set to true to hide all the color picker widgets (spectrum, hue, ...) except the swatches.
+   *
+   * @default false
+   */
+  swatchesOnly?: boolean;
+
+  /**
    * Enable or disable alpha support.
    *
    * When disabled, it will strip the alpha value from the existing color
