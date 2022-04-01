@@ -2,7 +2,7 @@
   "devDependencies": {
     "canvas": "^2.9.0",
     "chai": "^4.3.6",
-    "css-loader": "^6.7.0",
+    "css-loader": "^6.7.1",
     "jsdom": "^19.0.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.2.8",
