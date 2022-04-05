@@ -100,9 +100,7 @@ return ((window, document, Math) => {
               swatches.push(`<button id="clr-swatch-${i}" aria-labelledby="clr-swatch-label clr-swatch-${i}" style="color: ${swatch};">${swatch}</button>`);
             });
 
-            if (swatches.length) {
-              getEl('clr-swatches').innerHTML = `<div>${swatches.join('')}</div>`;
-            }
+            getEl('clr-swatches').innerHTML = swatches.length ? `<div>${swatches.join('')}</div>` : '';
           }
           break;
         case 'swatchesOnly':

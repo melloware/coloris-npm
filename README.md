@@ -52,7 +52,7 @@ The colorpicker can also be downloaded as a Java JAR for use in Java web applica
 <dependency>
    <groupId>org.webjars.npm</groupId>
    <artifactId>melloware__coloris</artifactId>
-   <version>0.10.2</version>
+   <version>0.10.3</version>
 </dependency>
 ```
 
