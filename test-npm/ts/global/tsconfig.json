@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": false,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "skipLibCheck": false,
+    "skipDefaultLibCheck": false,
+    "strict": true,
+    "types": ["@melloware/coloris-npm"]
+  },
+  "files": ["src/index.ts"]
+}

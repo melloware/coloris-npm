@@ -9,6 +9,10 @@ Convert any text input field into a color field.
 
 Forked from https://github.com/mdbassit/Coloris so we could provide TypeScript and NPM support. Head over to Momo Bassit's original repo for user documentation.
 
+## Bundlers
+
+See [the tests directory](./test-npm) for examples with different bundlers.
+
 ## NPM
 
 You can download the color picker from NPM:
@@ -31,12 +35,21 @@ Coloris.init();
 Coloris({el: "#coloris"});
 ```
 
+Since default exports can be tricky, if this does not work with your bundler, use named imports instead:
+
+```javascript
+import "@melloware/coloris/dist/coloris.css";
+import { coloris, init } from "@melloware/coloris";
+init();
+coloris({el: "#coloris"});
+```
+
 ## AMD
 
 The color picker also works with AMD / require.js:
 
 ```javascript
-requirejs(['@melloware/coloris'], function (Coloris) {
+requirejs(['path/to/coloris'], function (Coloris) {
   Coloris.init();
   Coloris({
     el: "#coloris",
@@ -60,6 +73,17 @@ The colorpicker can also be downloaded as a Java JAR for use in Java web applica
 
 This package includes TypeScript declarations. When you use it in a module
 environment, just import it:
+
+```typescript
+import "@melloware/coloris/dist/coloris.css";
+import * as Color from "@melloware/coloris";
+
+Coloris.init();
+Coloris.coloris({el: "#coloris"});
+Coloris.close();
+```
+
+If you have `allowSyntheticDefaultImports` enabled, you could also use:
 
 ```typescript
 import "@melloware/coloris/dist/coloris.css";

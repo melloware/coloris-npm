@@ -936,6 +936,9 @@ return ((window, document, Math) => {
     return Coloris;
   })();
 
+  // Ensure init function is available not only as as a default import
+  Coloris.coloris = Coloris;
+
   // Init the color picker when the DOM is ready
   return Coloris;
 
