@@ -1,0 +1,15 @@
+{
+  "name": "parcel-js-default-import",
+  "packageManager": "yarn@3.2.0",
+  "version": "1.0.0",
+  "source": "src/index.js",
+  "devDependencies": {
+    "@parcel/core": "^2.4.1",
+    "canvas": "^2.9.1",
+    "parcel": "^2.4.1"
+  },
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  }
+}
