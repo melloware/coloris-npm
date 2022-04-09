@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { spawnNpm, existsDir } = require("./helper");
+const { spawnNpm, existsDir, spawnYarn } = require("./helper");
 
 /**
  * @typedef {{success: true, path: string}} Success
@@ -24,32 +24,47 @@ undefined;
  * @param {string} base 
  * @returns {Promise<string[]>} 
  */
-async function readAvailableTests(base) {
+async function readTests(base) {
   const dirs = await fs.promises.readdir(base);
   /** @type {string[]} */
   const tests = [];
   for (const name of dirs) {
     const dir = path.join(base, name);
     if (await existsDir(dir) && name !== "helper") {
-      tests.push(name);
+      tests.push(dir);
     }
   }
   return tests;
 }
 
 /**
- * @param {string} path 
+ * @param {string} base 
+ * @returns {Promise<string[]>} 
+ */
+async function readAvailableTests(base) {
+  const tests = [
+    ...await readTests(path.join(base, "esm")),
+    ...await readTests(path.join(base, "umd")),
+    ...await readTests(path.join(base, "ts")),
+  ];
+  return tests.map(test => path.relative(base, test));
+}
+
+/**
+ * @param {string} dir 
  * @returns {Promise<TestResult>}
  */
-async function runTest(path) {
+async function runTest(dir) {
   console.log("");
-  console.log(" > Running test", path);
+  console.log(" > Running test", dir);
+  const testDir = path.join(__dirname, dir);
+  const testScript = path.join(testDir, "run-test.js");
   try {
-    await require(`./${path}/run-test.js`).main();
-    return { success: true, path };
+    await require(testScript).main();
+    return { success: true, path: dir };
   }
   catch (e) {
-    return { success: false, path, error: e instanceof Error ? e : new Error(String(e)) };
+    return { success: false, path: dir, error: e instanceof Error ? e : new Error(String(e)) };
   }
 }
 
@@ -60,7 +75,6 @@ async function runTest(path) {
 function notEmpty(value) {
   return value !== undefined && value.length > 0;
 }
-
 
 /**
  * @param {string[]} argv 

@@ -8,7 +8,18 @@
     "Andre Wachsmuth <sensenmann5@gmail.com> (https://github.com/blutorange)"
   ],
   "license": "MIT",
-  "main": "dist/coloris.js",
+  "main": "dist/umd/coloris.js",
+  "module": "dist/esm/coloris.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/coloris.js",
+      "require": "./dist/umd/coloris.js"
+    },
+    "./dist/coloris.css": {
+      "import": "./dist/coloris.css",
+      "require": "./dist/coloris.css"
+    }
+  },
   "types": "dist/coloris.d.ts",
   "files": [
     "dist"

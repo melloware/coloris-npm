@@ -35,6 +35,15 @@ Coloris.init();
 Coloris({el: "#coloris"});
 ```
 
+Since default exports can be tricky, if this does not work with your bundler, use named imports instead:
+
+```javascript
+import "@melloware/coloris/dist/coloris.css";
+import { coloris, init } from "@melloware/coloris";
+init();
+coloris({el: "#coloris"});
+```
+
 ## AMD
 
 The color picker also works with AMD / require.js:
@@ -64,6 +73,17 @@ The colorpicker can also be downloaded as a Java JAR for use in Java web applica
 
 This package includes TypeScript declarations. When you use it in a module
 environment, just import it:
+
+```typescript
+import "@melloware/coloris/dist/coloris.css";
+import * as Color from "@melloware/coloris";
+
+Coloris.init();
+Coloris.coloris({el: "#coloris"});
+Coloris.close();
+```
+
+If you have `allowSyntheticDefaultImports` enabled, you could also use:
 
 ```typescript
 import "@melloware/coloris/dist/coloris.css";

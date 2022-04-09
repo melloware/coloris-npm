@@ -167,8 +167,12 @@ async function spawnSimple(command, args, cwd) {
     env: process.env,
     cwd: cwd,
   });
-  if (error) throw error;
-  if (status !== 0) throw new Error(`Process exited with ${status}`);
+  if (error) {
+    throw error;
+  }
+  if (status !== 0) {
+    throw new Error(`Process exited with ${status}`);
+  }
 }
 
 /**
@@ -184,6 +188,9 @@ async function spawnNpm(args, cwd) {
     if (e.code === "ENOENT") {
       console.info("npm not found, using npm.cmd");
       await spawnSimple("npm.cmd", args, cwd);
+    }
+    else {
+      throw e;
     }
   }
 }
@@ -201,6 +208,9 @@ async function spawnYarn(args, cwd) {
     if (e.code === "ENOENT") {
       console.info("yarn not found, using yarn.cmd");
       await spawnSimple("yarn.cmd", args, cwd);
+    }
+    else {
+      throw e;
     }
   }
 }
