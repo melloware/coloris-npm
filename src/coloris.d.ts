@@ -185,6 +185,13 @@ declare namespace Coloris {
     focusInput?: boolean;
 
     /**
+     * Select and focus the color value input when the color picker dialog is opened.
+     *
+     * @default false
+     */
+    selectInput?: boolean;
+
+    /**
      * Set to true to close the color picker when a color is selected.
      *
      * @default false
@@ -207,6 +214,13 @@ declare namespace Coloris {
      * @default true
      */
     alpha?: boolean;
+
+    /**
+     * Set to true to always include the alpha value in the color value even if the opacity is 100%.
+     *
+     * @default false
+     */
+    forceAlpha?: boolean,
 
     /**
      * Shows a clear button and set its label. By default, no clear button is
