@@ -192,13 +192,6 @@ declare namespace Coloris {
     selectInput?: boolean;
 
     /**
-     * Set to true to close the color picker when a color is selected.
-     *
-     * @default false
-     */
-    autoClose?: boolean;
-
-    /**
      * Set to true to hide all the color picker widgets (spectrum, hue, ...) except the swatches.
      *
      * @default false

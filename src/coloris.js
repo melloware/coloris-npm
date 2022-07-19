@@ -26,7 +26,6 @@ return ((window, document, Math) => {
     forceAlpha: false,
     focusInput: true,
     selectInput: false,
-    autoClose: false,
     inline: false,
     defaultColor: '#000000',
     clearButton: {
@@ -118,9 +117,6 @@ return ((window, document, Math) => {
           settings.swatchesOnly = !!options.swatchesOnly;
           picker.setAttribute('data-minimal', settings.swatchesOnly);
 
-          if (settings.swatchesOnly) {
-            settings.autoClose = true;
-          }
           break;
         case 'alpha':
           settings.alpha = !!options.alpha;
@@ -857,7 +853,7 @@ return ((window, document, Math) => {
       setColorFromStr(event.target.textContent);
       pickColor();
 
-      if (settings.autoClose) {
+      if (settings.swatchesOnly) {
         closePicker();
       }
     });
