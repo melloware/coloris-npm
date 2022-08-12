@@ -12,7 +12,8 @@ declare namespace Coloris {
   type Theme =
     | "default"
     | "large"
-    | "polaroid";
+    | "polaroid"
+    | "pill";
 
   /**
    * All theme modes.
