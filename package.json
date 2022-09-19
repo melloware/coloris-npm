@@ -59,7 +59,7 @@
   "scripts": {
     "build": "gulp build",
     "start": "gulp",
-    "prepack": "gulp build && npm run test-npm",
+    "prepack": "gulp build",
     "test-npm": "node test-npm/run-tests.js"
   },
   "browserslist": "> 0.25%, not dead",
