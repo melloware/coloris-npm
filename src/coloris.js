@@ -941,7 +941,7 @@ return ((window, document, Math) => {
     });
 
     addListener(colorValue, 'change', event => {
-      if (currentEl) {
+      if (currentEl || settings.inline) {
         setColorFromStr(colorValue.value);
         pickColor();
       }
