@@ -102,6 +102,21 @@ declare namespace Coloris {
     label: string;
   }
 
+  /**
+  * Configuration for the optional close button on the color picker.
+  */
+  interface CloseButtonOptions {
+    /**
+     * Whether the close button is displayed when the color picker is opened.
+     */
+    show: boolean;
+
+    /**
+     * The label text shown on the close button.
+     */
+    label: string;
+  }
+
   interface ColorisOptions {
     /**
      * A custom CSS selector to bind the color picker to. This must point to
@@ -223,6 +238,14 @@ declare namespace Coloris {
      * @default undefined
      */
     clearButton?: ClearButtonOptions;
+
+    /**
+     * Shows a close button and set its label. By default, no close button is
+     * shown.
+     *
+     * @default undefined
+     */
+    closeButton?: CloseButtonOptions;
 
     /**
      * An array of the desired color swatches to display. If omitted or the
