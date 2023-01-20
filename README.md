@@ -60,7 +60,8 @@ requirejs(['path/to/coloris'], function (Coloris) {
 
 ## Java / Maven
 
-The colorpicker can also be downloaded as a Java JAR for use in Java web applicatons:
+The colorpicker can also be downloaded from [Maven Central](https://central.sonatype.dev/search?q=coloris)
+as a Java JAR for use in Java web applicatons:
 
 ```xml
 <dependency>
