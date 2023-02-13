@@ -343,6 +343,7 @@ return ((window, document, Math) => {
    * Update the color picker's position and the color gradient's offset
    */
   function updatePickerPosition() {
+    if (!picker || (!currentEl && !settings.inline)) return; /**** DO NOT REMOVE: in case called before initialized */
     const parent = container;
     const scrollY = window.scrollY;
     const pickerWidth = picker.offsetWidth;
