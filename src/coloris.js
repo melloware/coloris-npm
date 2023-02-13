@@ -1,7 +1,9 @@
 /*!
- * Copyright (c) 2021 Momo Bassit.
+ * Copyright (c) 2021-2023 Momo Bassit.
  * Licensed under the MIT License (MIT)
  * https://github.com/mdbassit/Coloris
+ * Version: 0.18.0
+ * NPM: https://github.com/melloware/coloris-npm
  */
 
 return ((window, document, Math) => {
@@ -16,6 +18,7 @@ return ((window, document, Math) => {
     parent: 'body',
     theme: 'default',
     themeMode: 'light',
+    rtl: false,
     wrap: true,
     margin: 2,
     format: 'hex',
@@ -32,6 +35,7 @@ return ((window, document, Math) => {
     clearLabel: 'Clear',
     closeButton: false,
     closeLabel: 'Close',
+    onChange: () => undefined,
     a11y: {
       open: 'Open color picker',
       close: 'Close color picker',
@@ -99,6 +103,10 @@ return ((window, document, Math) => {
           if (settings.inline) {
             updatePickerPosition();
           }
+          break;
+        case 'rtl':
+          settings.rtl = !!options.rtl;
+          document.querySelectorAll('.clr-field').forEach(field => field.classList.toggle('clr-rtl', settings.rtl));
           break;
         case 'margin':
           options.margin *= 1;
@@ -206,6 +214,7 @@ return ((window, document, Math) => {
             colorValue.setAttribute('aria-label', settings.a11y.input);
             colorArea.setAttribute('aria-label', settings.a11y.instruction);
           }
+          break;
         default:
           settings[key] = options[key];
       }
@@ -247,7 +256,7 @@ return ((window, document, Math) => {
   function attachVirtualInstance(element) {
     if (hasInstance) {
       // These options can only be set globally, not per instance
-      const unsupportedOptions = ['el', 'wrap', 'inline', 'defaultColor', 'a11y'];
+      const unsupportedOptions = ['el', 'wrap', 'rtl', 'inline', 'defaultColor', 'a11y'];
 
       for (let selector in instances) {
         const options = instances[selector];
@@ -395,13 +404,15 @@ return ((window, document, Math) => {
       picker.classList.toggle('clr-top', reposition.top);
       picker.style.left = `${left}px`;
       picker.style.top = `${top}px`;
+      offset.x += picker.offsetLeft;
+      offset.y += picker.offsetTop;
     }
     
     colorAreaDims = {
       width: colorArea.offsetWidth,
       height: colorArea.offsetHeight,
-      x: picker.offsetLeft + colorArea.offsetLeft + offset.x,
-      y: picker.offsetTop + colorArea.offsetTop + offset.y
+      x: colorArea.offsetLeft + offset.x,
+      y: colorArea.offsetTop + offset.y
     };
   }
 
@@ -415,10 +426,15 @@ return ((window, document, Math) => {
 
       if (!parentNode.classList.contains('clr-field')) {
         const wrapper = document.createElement('div');
+        let classes = 'clr-field';
+
+        if (settings.rtl || field.classList.contains('clr-rtl')) {
+          classes += ' clr-rtl';
+        }
 
         wrapper.innerHTML = `<button type="button" aria-labelledby="clr-open-label"></button>`;
         parentNode.insertBefore(wrapper, field);
-        wrapper.setAttribute('class', 'clr-field');
+        wrapper.setAttribute('class', classes);
         wrapper.style.color = field.value;
         wrapper.appendChild(field);
       }
@@ -521,6 +537,10 @@ return ((window, document, Math) => {
     if (currentEl) {
       currentEl.value = color;
       currentEl.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    if (settings.onChange) {
+      settings.onChange.call(window, color);
     }
 
     document.dispatchEvent(new CustomEvent('coloris:pick', { detail: { color } }));
@@ -894,22 +914,23 @@ return ((window, document, Math) => {
    * Init the color picker.
    */
   function init() {
+    if (document.getElementById('clr-picker')) return; /**** DO NOT REMOVE: Prevent binding events multiple times */
     // Render the UI
     container = null;
     picker = document.createElement('div');
     picker.setAttribute('id', 'clr-picker');
     picker.className = 'clr-picker';
     picker.innerHTML =
-    `<input id="clr-color-value" class="clr-color" type="text" value="" spellcheck="false" aria-label="${settings.a11y.input}">`+
+    `<input id="clr-color-value" name="clr-color-value" class="clr-color" type="text" value="" spellcheck="false" aria-label="${settings.a11y.input}">`+
     `<div id="clr-color-area" class="clr-gradient" role="application" aria-label="${settings.a11y.instruction}">`+
       '<div id="clr-color-marker" class="clr-marker" tabindex="0"></div>'+
     '</div>'+
     '<div class="clr-hue">'+
-      `<input id="clr-hue-slider" type="range" min="0" max="360" step="1" aria-label="${settings.a11y.hueSlider}">`+
+      `<input id="clr-hue-slider" name="clr-hue-slider" type="range" min="0" max="360" step="1" aria-label="${settings.a11y.hueSlider}">`+
       '<div id="clr-hue-marker"></div>'+
     '</div>'+
     '<div class="clr-alpha">'+
-      `<input id="clr-alpha-slider" type="range" min="0" max="100" step="1" aria-label="${settings.a11y.alphaSlider}">`+
+      `<input id="clr-alpha-slider" name="clr-alpha-slider" type="range" min="0" max="100" step="1" aria-label="${settings.a11y.alphaSlider}">`+
       '<div id="clr-alpha-marker"></div>'+
       '<span></span>'+
     '</div>'+

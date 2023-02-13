@@ -149,6 +149,14 @@ declare namespace Coloris {
      * @default true
      */
     wrap?: boolean;
+    
+    // Set to true to activate basic right-to-left support.
+    /**
+     * Set to true to activate basic right-to-left support.
+     *
+     * @default false
+     */
+    rtl?: boolean;
 
     /**
      * The color theme to use for the color picker. More themes might be added
@@ -316,5 +324,4 @@ export as namespace Coloris;
  * methods.
  */
 export = Coloris;
-
 
