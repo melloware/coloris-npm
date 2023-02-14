@@ -1194,6 +1194,7 @@ return ((window, document, Math) => {
     // handle window resize events re-aligning the panel
     DOMReady(() => {
         window.addEventListener('resize', event => { Coloris.updatePosition(); });
+        window.addEventListener('scroll', event => { Coloris.updatePosition(); });
     });
     
     return Coloris;
