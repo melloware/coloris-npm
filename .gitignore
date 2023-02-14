@@ -8,3 +8,5 @@ dist
 
 # For people using vscode
 .vscode
+
+.parcel-cache
