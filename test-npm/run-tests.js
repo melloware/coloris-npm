@@ -77,12 +77,22 @@ function notEmpty(value) {
 }
 
 /**
+ * @template T
+ * @param {T | undefined} value 
+ * @returns {value is T}
+ */
+function notUndefined(value) {
+  return value !== undefined;
+}
+
+/**
  * @param {string[]} argv 
  * @return {Set<string>}
  */
 function getTestsToRun(argv) {
   return new Set(argv
     .map((arg, index, args) => arg === "-test" || arg === "--test" ? args[index + 1] : undefined)
+    .filter(notUndefined)
     .filter(notEmpty));
 }
 
