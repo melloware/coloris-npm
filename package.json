@@ -13,7 +13,8 @@
   "exports": {
     ".": {
       "import": "./dist/esm/coloris.js",
-      "require": "./dist/umd/coloris.js"
+      "require": "./dist/umd/coloris.js",
+      "types": "./dist/coloris.d.ts"
     },
     "./dist/coloris.css": {
       "import": "./dist/coloris.css",
