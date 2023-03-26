@@ -1,0 +1,8 @@
+{
+    "name": "test-helper",
+    "type": "commonjs",
+    "dependencies": {
+        "chai": "^4.3.6",
+        "jsdom": "^19.0.0"
+    }
+}

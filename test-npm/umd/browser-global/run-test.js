@@ -1,7 +1,7 @@
 // @ts-check
 
 const path = require("path");
-const { loadHtml, clean, spawnYarn, requireChai, requireJsdom } = require("../../helper");
+const { loadHtml, clean, spawnYarn, requireChai, requireJsdom } = require("../../harness/umd/helper.js");
 
 module.exports.main = async () => {
   await clean(__dirname);

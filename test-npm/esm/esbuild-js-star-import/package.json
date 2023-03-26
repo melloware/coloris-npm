@@ -1,0 +1,16 @@
+{
+  "name": "parcel-js-star-import",
+  "packageManager": "yarn@3.5.0",
+  "version": "1.0.0",
+  "source": "src/index.js",
+  "dependencies": {
+    "@melloware/coloris-npm": "portal:../../.."
+  },
+  "devDependencies": {
+    "canvas": "^2.11.0",
+    "esbuild": "^0.17.13"
+  },
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --minify --outfile=dist/index.js"
+  }
+}

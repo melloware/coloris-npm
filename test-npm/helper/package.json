@@ -1,7 +1,0 @@
-{
-    "name": "test-helper",
-    "dependencies": {
-        "chai": "^4.3.6",
-        "jsdom": "^19.0.0"
-    }
-}
