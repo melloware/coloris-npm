@@ -1,7 +1,7 @@
 // @ts-check
 
 const path = require("path");
-const { copyFile, loadHtml, clean, spawnYarn, requireChai, requireJsdom, removeDir, removeFile, timeout, delay, waitUntil } = require("../../helper");
+const { copyFile, loadHtml, clean, spawnYarn, requireChai, requireJsdom, removeDir, removeFile, timeout, delay, waitUntil } = require("../../harness/umd/helper.js");
 
 module.exports.main = async () => {
   const colorisSource = path.join(__dirname, "..", "..", "..", "dist", "umd", "coloris.min.js");

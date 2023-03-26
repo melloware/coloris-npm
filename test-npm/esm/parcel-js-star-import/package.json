@@ -1,15 +1,15 @@
 {
   "name": "parcel-js-star-import",
-  "packageManager": "yarn@3.2.3",
+  "packageManager": "yarn@3.5.0",
   "version": "1.0.0",
   "source": "src/index.js",
   "dependencies": {
     "@melloware/coloris-npm": "portal:../../.."
   },
   "devDependencies": {
-    "@parcel/core": "^2.4.1",
-    "canvas": "^2.9.1",
-    "parcel": "^2.4.1"
+    "@parcel/core": "2.8.3",
+    "canvas": "^2.11.0",
+    "parcel": "^2.8.3"
   },
   "scripts": {
     "start": "parcel",

@@ -6,4 +6,4 @@ To run all test, go to the root directory (with the `umd-wrapper.js` file), and 
 
 To run specific tests:
 
-> npm run test-npm -test umd/browser-global -test esm/parcel-js-star-import
+> npm run test-npm -- -test umd/browser-global -test esm/parcel-js-star-import
