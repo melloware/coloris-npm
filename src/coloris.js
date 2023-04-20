@@ -348,6 +348,7 @@ return ((window, document, Math) => {
    * Update the color picker's position and the color gradient's offset
    */
   function updatePickerPosition() {
+    if (!picker || (!currentEl && !settings.inline)) return; //** DO NOT REMOVE: in case called before initialized
     var parent = container;
     var scrollY = window.scrollY;
     var pickerWidth = picker.offsetWidth;
@@ -919,6 +920,7 @@ return ((window, document, Math) => {
    * Init the color picker.
    */
   function init() {
+    if (document.getElementById('clr-picker')) return; //** DO NOT REMOVE: Prevent binding events multiple times
     // Render the UI
     container = null;
     picker = document.createElement('div');
