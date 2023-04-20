@@ -2,18 +2,18 @@
  * Copyright (c) 2021-2023 Momo Bassit.
  * Licensed under the MIT License (MIT)
  * https://github.com/mdbassit/Coloris
- * Version: 0.18.0
+ * Version: 0.19.0
  * NPM: https://github.com/melloware/coloris-npm
  */
 
 return ((window, document, Math) => {
-  var ctx = document.createElement('canvas').getContext('2d');
-  var currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0, a: 1 };
-  var container, picker, colorArea, colorAreaDims, colorMarker, colorPreview, colorValue, clearButton, closeButton,
-  hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor, keyboardNav;
+  const ctx = document.createElement('canvas').getContext('2d');
+  const currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0, a: 1 };
+  let container, picker, colorArea, colorAreaDims, colorMarker, colorPreview, colorValue, clearButton, closeButton,
+      hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor, keyboardNav;
 
   // Default settings
-  var settings = {
+  const settings = {
     el: '[data-coloris]',
     parent: 'body',
     theme: 'default',
@@ -22,7 +22,7 @@ return ((window, document, Math) => {
     wrap: true,
     margin: 2,
     format: 'hex',
-    formatToggle: false,
+    formatToggle : false,
     swatches: [],
     swatchesOnly: false,
     alpha: true,
@@ -35,7 +35,7 @@ return ((window, document, Math) => {
     clearLabel: 'Clear',
     closeButton: false,
     closeLabel: 'Close',
-    onChange: function onChange() {return undefined;},
+    onChange: () => undefined,
     a11y: {
       open: 'Open color picker',
       close: 'Close color picker',
@@ -46,15 +46,15 @@ return ((window, document, Math) => {
       input: 'Color value field',
       format: 'Color format',
       swatch: 'Color swatch',
-      instruction: 'Saturation and brightness selector. Use up, down, left and right arrow keys to select.' } };
-
-
+      instruction: 'Saturation and brightness selector. Use up, down, left and right arrow keys to select.'
+    }
+  };
 
   // Virtual instances cache
-  var instances = {};
-  var currentInstanceId = '';
-  var defaultInstance = {};
-  var hasInstance = false;
+  const instances = {};
+  let currentInstanceId = '';
+  let defaultInstance = {};
+  let hasInstance = false;
 
   /**
    * Configure the color picker.
@@ -65,7 +65,7 @@ return ((window, document, Math) => {
       return;
     }
 
-    for (var key in options) {
+    for (const key in options) {
       switch (key) {
         case 'el':
           bindFields(options.el);
@@ -90,14 +90,14 @@ return ((window, document, Math) => {
           if (options.themeMode === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             settings.themeMode = 'dark';
           }
-        // The lack of a break statement is intentional
+          // The lack of a break statement is intentional
         case 'theme':
           if (options.theme) {
             settings.theme = options.theme;
           }
 
           // Set the theme and color scheme
-          picker.className = "clr-picker clr-" + settings.theme + " clr-" + settings.themeMode;
+          picker.className = `clr-picker clr-${settings.theme} clr-${settings.themeMode}`;
 
           // Update the color picker's position if inline mode is in use
           if (settings.inline) {
@@ -106,7 +106,7 @@ return ((window, document, Math) => {
           break;
         case 'rtl':
           settings.rtl = !!options.rtl;
-          document.querySelectorAll('.clr-field').forEach(function (field) {return field.classList.toggle('clr-rtl', settings.rtl);});
+          document.querySelectorAll('.clr-field').forEach(field => field.classList.toggle('clr-rtl', settings.rtl));
           break;
         case 'margin':
           options.margin *= 1;
@@ -125,15 +125,15 @@ return ((window, document, Math) => {
           }
           break;
         case 'swatches':
-          if (Array.isArray(options.swatches)) {(function () {
-              var swatches = [];
+          if (Array.isArray(options.swatches)) {
+            const swatches = [];
 
-              options.swatches.forEach(function (swatch, i) {
-                swatches.push("<button type=\"button\" id=\"clr-swatch-" + i + "\" aria-labelledby=\"clr-swatch-label clr-swatch-" + i + "\" style=\"color: " + swatch + ";\">" + swatch + "</button>");
-              });
+            options.swatches.forEach((swatch, i) => {
+              swatches.push(`<button type="button" id="clr-swatch-${i}" aria-labelledby="clr-swatch-label clr-swatch-${i}" style="color: ${swatch};">${swatch}</button>`);
+            });
 
-              getEl('clr-swatches').innerHTML = swatches.length ? "<div>" + swatches.join('') + "</div>" : '';
-              settings.swatches = options.swatches.slice();})();
+            getEl('clr-swatches').innerHTML = swatches.length ? `<div>${swatches.join('')}</div>` : '';
+            settings.swatches = options.swatches.slice();
           }
           break;
         case 'swatchesOnly':
@@ -149,8 +149,8 @@ return ((window, document, Math) => {
           picker.setAttribute('data-inline', settings.inline);
 
           if (settings.inline) {
-            var defaultColor = options.defaultColor || settings.defaultColor;
-
+            const defaultColor = options.defaultColor || settings.defaultColor;
+            
             currentFormat = getColorFormatFromStr(defaultColor);
             updatePickerPosition();
             setColorFromStr(defaultColor);
@@ -189,11 +189,11 @@ return ((window, document, Math) => {
           closeButton.innerHTML = settings.closeLabel;
           break;
         case 'a11y':
-          var labels = options.a11y;
-          var update = false;
+          const labels = options.a11y;
+          let update = false;
 
           if (typeof labels === 'object') {
-            for (var label in labels) {
+            for (const label in labels) {
               if (labels[label] && settings.a11y[label]) {
                 settings.a11y[label] = labels[label];
                 update = true;
@@ -202,8 +202,8 @@ return ((window, document, Math) => {
           }
 
           if (update) {
-            var openLabel = getEl('clr-open-label');
-            var swatchLabel = getEl('clr-swatch-label');
+            const openLabel = getEl('clr-open-label');
+            const swatchLabel = getEl('clr-swatch-label');
 
             openLabel.innerHTML = settings.a11y.open;
             swatchLabel.innerHTML = settings.a11y.swatch;
@@ -216,8 +216,8 @@ return ((window, document, Math) => {
           }
           break;
         default:
-          settings[key] = options[key];}
-
+          settings[key] = options[key];
+      }
     }
   }
 
@@ -256,10 +256,10 @@ return ((window, document, Math) => {
   function attachVirtualInstance(element) {
     if (hasInstance) {
       // These options can only be set globally, not per instance
-      var unsupportedOptions = ['el', 'wrap', 'rtl', 'inline', 'defaultColor', 'a11y'];var _loop = function _loop(
+      const unsupportedOptions = ['el', 'wrap', 'rtl', 'inline', 'defaultColor', 'a11y'];
 
-      selector) {
-        var options = instances[selector];
+      for (let selector in instances) {
+        const options = instances[selector];
 
         // If the element matches an instance's CSS selector
         if (element.matches(selector)) {
@@ -267,17 +267,17 @@ return ((window, document, Math) => {
           defaultInstance = {};
 
           // Delete unsupported options
-          unsupportedOptions.forEach(function (option) {return delete options[option];});
+          unsupportedOptions.forEach(option => delete options[option]);
 
           // Back up the default options so we can restore them later
-          for (var option in options) {
+          for (let option in options) {
             defaultInstance[option] = Array.isArray(settings[option]) ? settings[option].slice() : settings[option];
           }
 
           // Set the instance's options
           configure(options);
-          return "break";
-        }};for (var selector in instances) {var _ret = _loop(selector);if (_ret === "break") break;
+          break;
+        }
       }
     }
   }
@@ -299,7 +299,7 @@ return ((window, document, Math) => {
    */
   function bindFields(selector) {
     // Show the color picker on click on the input fields that match the selector
-    addListener(document, 'click', selector, function (event) {
+    addListener(document, 'click', selector, event => {
       // Skip if inline mode is in use
       if (settings.inline) {
         return;
@@ -312,14 +312,14 @@ return ((window, document, Math) => {
       oldColor = currentEl.value;
       currentFormat = getColorFormatFromStr(oldColor);
       picker.classList.add('clr-open');
-
+      
       updatePickerPosition();
       setColorFromStr(oldColor);
 
       if (settings.focusInput || settings.selectInput) {
         colorValue.focus({ preventScroll: true });
       }
-
+      
       if (settings.selectInput) {
         colorValue.select();
       }
@@ -334,8 +334,8 @@ return ((window, document, Math) => {
     });
 
     // Update the color preview of the input fields that match the selector
-    addListener(document, 'input', selector, function (event) {
-      var parent = event.target.parentNode;
+    addListener(document, 'input', selector, event => {
+      const parent = event.target.parentNode;
 
       // Only update the preview if the field has been previously wrapped
       if (parent.classList.contains('clr-field')) {
@@ -349,13 +349,13 @@ return ((window, document, Math) => {
    */
   function updatePickerPosition() {
     if (!picker || (!currentEl && !settings.inline)) return; //** DO NOT REMOVE: in case called before initialized
-    var parent = container;
-    var scrollY = window.scrollY;
-    var pickerWidth = picker.offsetWidth;
-    var pickerHeight = picker.offsetHeight;
-    var reposition = { left: false, top: false };
-    var parentStyle, parentMarginTop, parentBorderTop;
-    var offset = { x: 0, y: 0 };
+    const parent = container;
+    const scrollY = window.scrollY;
+    const pickerWidth = picker.offsetWidth;
+    const pickerHeight = picker.offsetHeight;
+    const reposition = { left: false, top: false };
+    let parentStyle, parentMarginTop, parentBorderTop;
+    let offset = { x: 0, y: 0 };
 
     if (parent) {
       parentStyle = window.getComputedStyle(parent);
@@ -367,9 +367,9 @@ return ((window, document, Math) => {
     }
 
     if (!settings.inline) {
-      var coords = currentEl.getBoundingClientRect();
-      var left = coords.x;
-      var top = scrollY + coords.y + coords.height + settings.margin;
+      const coords = currentEl.getBoundingClientRect();
+      let left = coords.x;
+      let top = scrollY + coords.y + coords.height + settings.margin;
 
       // If the color picker is inside a custom container
       // set the position relative to it
@@ -382,7 +382,7 @@ return ((window, document, Math) => {
           reposition.left = true;
         }
 
-        if (top + pickerHeight > parent.clientHeight - parentMarginTop) {
+        if (top + pickerHeight >  parent.clientHeight - parentMarginTop) {
           if (pickerHeight + settings.margin <= coords.top - (offset.y - scrollY)) {
             top -= coords.height + pickerHeight + settings.margin * 2;
             reposition.top = true;
@@ -391,7 +391,7 @@ return ((window, document, Math) => {
 
         top += parent.scrollTop;
 
-        // Otherwise set the position relative to the whole document
+      // Otherwise set the position relative to the whole document
       } else {
         if (left + pickerWidth > document.documentElement.clientWidth) {
           left += coords.width - pickerWidth;
@@ -408,18 +408,18 @@ return ((window, document, Math) => {
 
       picker.classList.toggle('clr-left', reposition.left);
       picker.classList.toggle('clr-top', reposition.top);
-      picker.style.left = left + "px";
-      picker.style.top = top + "px";
+      picker.style.left = `${left}px`;
+      picker.style.top = `${top}px`;
       offset.x += picker.offsetLeft;
       offset.y += picker.offsetTop;
     }
-
+    
     colorAreaDims = {
       width: colorArea.offsetWidth,
       height: colorArea.offsetHeight,
       x: colorArea.offsetLeft + offset.x,
-      y: colorArea.offsetTop + offset.y };
-
+      y: colorArea.offsetTop + offset.y
+    };
   }
 
   /**
@@ -427,18 +427,18 @@ return ((window, document, Math) => {
    * @param {string} selector One or more selectors pointing to input fields.
    */
   function wrapFields(selector) {
-    document.querySelectorAll(selector).forEach(function (field) {
-      var parentNode = field.parentNode;
+    document.querySelectorAll(selector).forEach(field => {
+      const parentNode = field.parentNode;
 
       if (!parentNode.classList.contains('clr-field')) {
-        var wrapper = document.createElement('div');
-        var classes = 'clr-field';
+        const wrapper = document.createElement('div');
+        let classes = 'clr-field';
 
         if (settings.rtl || field.classList.contains('clr-rtl')) {
           classes += ' clr-rtl';
         }
 
-        wrapper.innerHTML = "<button type=\"button\" aria-labelledby=\"clr-open-label\"></button>";
+        wrapper.innerHTML = `<button type="button" aria-labelledby="clr-open-label"></button>`;
         parentNode.insertBefore(wrapper, field);
         wrapper.setAttribute('class', classes);
         wrapper.style.color = field.value;
@@ -453,7 +453,7 @@ return ((window, document, Math) => {
    */
   function closePicker(revert) {
     if (currentEl && !settings.inline) {
-      var prevEl = currentEl;
+      const prevEl = currentEl;
 
       // Revert the color to the original value if needed
       if (revert) {
@@ -469,7 +469,7 @@ return ((window, document, Math) => {
       }
 
       // Trigger a "change" event if needed
-      setTimeout(function () {// Add this to the end of the event loop
+      setTimeout(() => { // Add this to the end of the event loop
         if (oldColor !== prevEl.value) {
           prevEl.dispatchEvent(new Event('change', { bubbles: true }));
         }
@@ -500,22 +500,22 @@ return ((window, document, Math) => {
    * @param {string} str String representing a color.
    */
   function setColorFromStr(str) {
-    var rgba = strToRGBA(str);
-    var hsva = RGBAtoHSVA(rgba);
+    const rgba = strToRGBA(str);
+    const hsva = RGBAtoHSVA(rgba);
 
     updateMarkerA11yLabel(hsva.s, hsva.v);
     updateColor(rgba, hsva);
 
     // Update the UI
     hueSlider.value = hsva.h;
-    picker.style.color = "hsl(" + hsva.h + ", 100%, 50%)";
-    hueMarker.style.left = hsva.h / 360 * 100 + "%";
+    picker.style.color = `hsl(${hsva.h}, 100%, 50%)`;
+    hueMarker.style.left = `${hsva.h / 360 * 100}%`;
 
-    colorMarker.style.left = colorAreaDims.width * hsva.s / 100 + "px";
-    colorMarker.style.top = colorAreaDims.height - colorAreaDims.height * hsva.v / 100 + "px";
+    colorMarker.style.left = `${colorAreaDims.width * hsva.s / 100}px`;
+    colorMarker.style.top = `${colorAreaDims.height - (colorAreaDims.height * hsva.v / 100)}px`;
 
     alphaSlider.value = hsva.a * 100;
-    alphaMarker.style.left = hsva.a * 100 + "%";
+    alphaMarker.style.left = `${hsva.a * 100}%`;
   }
 
   /**
@@ -524,9 +524,9 @@ return ((window, document, Math) => {
    * @return {string} The color format.
    */
   function getColorFormatFromStr(str) {
-    var format = str.substring(0, 3).toLowerCase();
+    const format = str.substring(0, 3).toLowerCase();
 
-    if (format === 'rgb' || format === 'hsl') {
+    if (format === 'rgb' || format === 'hsl' ) {
       return format;
     }
 
@@ -549,7 +549,7 @@ return ((window, document, Math) => {
       settings.onChange.call(window, color);
     }
 
-    document.dispatchEvent(new CustomEvent('coloris:pick', { detail: { color: color } }));
+    document.dispatchEvent(new CustomEvent('coloris:pick', { detail: { color } }));
   }
 
   /**
@@ -558,13 +558,13 @@ return ((window, document, Math) => {
    * @param {number} y Top position.
    */
   function setColorAtPosition(x, y) {
-    var hsva = {
+    const hsva = {
       h: hueSlider.value * 1,
       s: x / colorAreaDims.width * 100,
-      v: 100 - y / colorAreaDims.height * 100,
-      a: alphaSlider.value / 100 };
-
-    var rgba = HSVAtoRGBA(hsva);
+      v: 100 - (y / colorAreaDims.height * 100),
+      a: alphaSlider.value / 100
+    };
+    const rgba = HSVAtoRGBA(hsva);
 
     updateMarkerA11yLabel(hsva.s, hsva.v);
     updateColor(rgba, hsva);
@@ -577,7 +577,7 @@ return ((window, document, Math) => {
    * @param {number} value
    */
   function updateMarkerA11yLabel(saturation, value) {
-    var label = settings.a11y.marker;
+    let label = settings.a11y.marker;
 
     saturation = saturation.toFixed(1) * 1;
     value = value.toFixed(1) * 1;
@@ -595,8 +595,8 @@ return ((window, document, Math) => {
   function getPointerPosition(event) {
     return {
       pageX: event.changedTouches ? event.changedTouches[0].pageX : event.pageX,
-      pageY: event.changedTouches ? event.changedTouches[0].pageY : event.pageY };
-
+      pageY: event.changedTouches ? event.changedTouches[0].pageY : event.pageY
+    };
   }
 
   /**
@@ -604,9 +604,9 @@ return ((window, document, Math) => {
    * @param {object} event The MouseEvent object.
    */
   function moveMarker(event) {
-    var pointer = getPointerPosition(event);
-    var x = pointer.pageX - colorAreaDims.x;
-    var y = pointer.pageY - colorAreaDims.y;
+    const pointer = getPointerPosition(event);
+    let x = pointer.pageX - colorAreaDims.x;
+    let y = pointer.pageY - colorAreaDims.y;
 
     if (container) {
       y += container.scrollTop;
@@ -625,8 +625,8 @@ return ((window, document, Math) => {
    * @param {number} offsetY The vertical amount to move.
    */
   function moveMarkerOnKeydown(offsetX, offsetY) {
-    var x = colorMarker.style.left.replace('px', '') * 1 + offsetX;
-    var y = colorMarker.style.top.replace('px', '') * 1 + offsetY;
+    let x = colorMarker.style.left.replace('px', '') * 1 + offsetX;
+    let y = colorMarker.style.top.replace('px', '') * 1 + offsetY;
 
     setMarkerPosition(x, y);
   }
@@ -638,12 +638,12 @@ return ((window, document, Math) => {
    */
   function setMarkerPosition(x, y) {
     // Make sure the marker doesn't go out of bounds
-    x = x < 0 ? 0 : x > colorAreaDims.width ? colorAreaDims.width : x;
-    y = y < 0 ? 0 : y > colorAreaDims.height ? colorAreaDims.height : y;
+    x = (x < 0) ? 0 : (x > colorAreaDims.width) ? colorAreaDims.width : x;
+    y = (y < 0) ? 0 : (y > colorAreaDims.height) ? colorAreaDims.height : y;
 
     // Set the position
-    colorMarker.style.left = x + "px";
-    colorMarker.style.top = y + "px";
+    colorMarker.style.left = `${x}px`;
+    colorMarker.style.top = `${y}px`;
 
     // Update the color
     setColorAtPosition(x, y);
@@ -657,19 +657,19 @@ return ((window, document, Math) => {
    * @param {Object} rgba Red, green, blue and alpha values.
    * @param {Object} [hsva] Hue, saturation, value and alpha values.
    */
-  function updateColor(rgba, hsva) {if (rgba === void 0) {rgba = {};}if (hsva === void 0) {hsva = {};}
-    var format = settings.format;
+  function updateColor(rgba = {}, hsva = {}) {
+    let format = settings.format;
 
-    for (var key in rgba) {
+    for (const key in rgba) {
       currentColor[key] = rgba[key];
     }
 
-    for (var _key in hsva) {
-      currentColor[_key] = hsva[_key];
+    for (const key in hsva) {
+      currentColor[key] = hsva[key];
     }
 
-    var hex = RGBAToHex(currentColor);
-    var opaqueHex = hex.substring(0, 7);
+    const hex = RGBAToHex(currentColor);
+    const opaqueHex = hex.substring(0, 7);
 
     colorMarker.style.color = opaqueHex;
     alphaMarker.parentNode.style.color = opaqueHex;
@@ -699,23 +699,23 @@ return ((window, document, Math) => {
         break;
       case 'hsl':
         colorValue.value = HSLAToStr(HSVAtoHSLA(currentColor));
-        break;}
-
+        break;
+    }
 
     // Select the current format in the format switcher
-    document.querySelector(".clr-format [value=\"" + format + "\"]").checked = true;
+    document.querySelector(`.clr-format [value="${format}"]`).checked = true;
   }
 
   /**
    * Set the hue when its slider is moved.
    */
   function setHue() {
-    var hue = hueSlider.value * 1;
-    var x = colorMarker.style.left.replace('px', '') * 1;
-    var y = colorMarker.style.top.replace('px', '') * 1;
+    const hue = hueSlider.value * 1;
+    const x = colorMarker.style.left.replace('px', '') * 1;
+    const y =  colorMarker.style.top.replace('px', '') * 1;
 
-    picker.style.color = "hsl(" + hue + ", 100%, 50%)";
-    hueMarker.style.left = hue / 360 * 100 + "%";
+    picker.style.color = `hsl(${hue}, 100%, 50%)`;
+    hueMarker.style.left = `${hue / 360 * 100}%`;
 
     setColorAtPosition(x, y);
   }
@@ -724,9 +724,9 @@ return ((window, document, Math) => {
    * Set the alpha when its slider is moved.
    */
   function setAlpha() {
-    var alpha = alphaSlider.value / 100;
+    const alpha = alphaSlider.value / 100;
 
-    alphaMarker.style.left = alpha * 100 + "%";
+    alphaMarker.style.left = `${alpha * 100}%`;
     updateColor({ a: alpha });
     pickColor();
   }
@@ -737,27 +737,27 @@ return ((window, document, Math) => {
    * @return {object} Red, green, blue and alpha values.
    */
   function HSVAtoRGBA(hsva) {
-    var saturation = hsva.s / 100;
-    var value = hsva.v / 100;
-    var chroma = saturation * value;
-    var hueBy60 = hsva.h / 60;
-    var x = chroma * (1 - Math.abs(hueBy60 % 2 - 1));
-    var m = value - chroma;
+    const saturation = hsva.s / 100;
+    const value = hsva.v / 100;
+    let chroma = saturation * value;
+    let hueBy60 = hsva.h / 60;
+    let x = chroma * (1 - Math.abs(hueBy60 % 2 - 1));
+    let m = value - chroma;
 
-    chroma = chroma + m;
-    x = x + m;
+    chroma = (chroma + m);
+    x = (x + m);
 
-    var index = Math.floor(hueBy60) % 6;
-    var red = [chroma, x, m, m, x, chroma][index];
-    var green = [x, chroma, chroma, x, m, m][index];
-    var blue = [m, m, x, chroma, chroma, x][index];
+    const index = Math.floor(hueBy60) % 6;
+    const red = [chroma, x, m, m, x, chroma][index];
+    const green = [x, chroma, chroma, x, m, m][index];
+    const blue = [m, m, x, chroma, chroma, x][index];
 
     return {
       r: Math.round(red * 255),
       g: Math.round(green * 255),
       b: Math.round(blue * 255),
-      a: hsva.a };
-
+      a: hsva.a
+    };
   }
 
   /**
@@ -766,9 +766,9 @@ return ((window, document, Math) => {
    * @return {object} Hue, saturation, lightness and alpha values.
    */
   function HSVAtoHSLA(hsva) {
-    var value = hsva.v / 100;
-    var lightness = value * (1 - hsva.s / 100 / 2);
-    var saturation;
+    const value = hsva.v / 100;
+    const lightness = value * (1 - (hsva.s / 100) / 2);
+    let saturation;
 
     if (lightness > 0 && lightness < 1) {
       saturation = Math.round((value - lightness) / Math.min(lightness, 1 - lightness) * 100);
@@ -778,8 +778,8 @@ return ((window, document, Math) => {
       h: hsva.h,
       s: saturation || 0,
       l: Math.round(lightness * 100),
-      a: hsva.a };
-
+      a: hsva.a
+    };
   }
 
   /**
@@ -788,21 +788,21 @@ return ((window, document, Math) => {
    * @return {object} Hue, saturation, value and alpha values.
    */
   function RGBAtoHSVA(rgba) {
-    var red = rgba.r / 255;
-    var green = rgba.g / 255;
-    var blue = rgba.b / 255;
-    var xmax = Math.max(red, green, blue);
-    var xmin = Math.min(red, green, blue);
-    var chroma = xmax - xmin;
-    var value = xmax;
-    var hue = 0;
-    var saturation = 0;
+    const red   = rgba.r / 255;
+    const green = rgba.g / 255;
+    const blue  = rgba.b / 255;
+    const xmax = Math.max(red, green, blue);
+    const xmin = Math.min(red, green, blue);
+    const chroma = xmax - xmin;
+    const value = xmax;
+    let hue = 0;
+    let saturation = 0;
 
     if (chroma) {
-      if (xmax === red) {hue = (green - blue) / chroma;}
-      if (xmax === green) {hue = 2 + (blue - red) / chroma;}
-      if (xmax === blue) {hue = 4 + (red - green) / chroma;}
-      if (xmax) {saturation = chroma / xmax;}
+      if (xmax === red ) { hue = ((green - blue) / chroma); }
+      if (xmax === green ) { hue = 2 + (blue - red) / chroma; }
+      if (xmax === blue ) { hue = 4 + (red - green) / chroma; }
+      if (xmax) { saturation = chroma / xmax; }
     }
 
     hue = Math.floor(hue * 60);
@@ -811,8 +811,8 @@ return ((window, document, Math) => {
       h: hue < 0 ? hue + 360 : hue,
       s: Math.round(saturation * 100),
       v: Math.round(value * 100),
-      a: rgba.a };
-
+      a: rgba.a
+    };
   }
 
   /**
@@ -821,8 +821,8 @@ return ((window, document, Math) => {
    * @return {object} Red, green, blue and alpha values.
    */
   function strToRGBA(str) {
-    var regex = /^((rgba)|rgb)[\D]+([\d.]+)[\D]+([\d.]+)[\D]+([\d.]+)[\D]*?([\d.]+|$)/i;
-    var match, rgba;
+    const regex = /^((rgba)|rgb)[\D]+([\d.]+)[\D]+([\d.]+)[\D]+([\d.]+)[\D]*?([\d.]+|$)/i;
+    let match, rgba;
 
     // Default to black for invalid color strings
     ctx.fillStyle = '#000';
@@ -836,20 +836,20 @@ return ((window, document, Math) => {
         r: match[3] * 1,
         g: match[4] * 1,
         b: match[5] * 1,
-        a: match[6] * 1 };
-
+        a: match[6] * 1
+      };
 
       // Workaround to mitigate a Chromium bug where the alpha value is rounded incorrectly
       rgba.a = +rgba.a.toFixed(2);
 
     } else {
-      match = ctx.fillStyle.replace('#', '').match(/.{2}/g).map(function (h) {return parseInt(h, 16);});
+      match = ctx.fillStyle.replace('#', '').match(/.{2}/g).map(h => parseInt(h, 16));
       rgba = {
         r: match[0],
         g: match[1],
         b: match[2],
-        a: 1 };
-
+        a: 1
+      };
     }
 
     return rgba;
@@ -861,10 +861,10 @@ return ((window, document, Math) => {
    * @return {string} Hex color string.
    */
   function RGBAToHex(rgba) {
-    var R = rgba.r.toString(16);
-    var G = rgba.g.toString(16);
-    var B = rgba.b.toString(16);
-    var A = '';
+    let R = rgba.r.toString(16);
+    let G = rgba.g.toString(16);
+    let B = rgba.b.toString(16);
+    let A = '';
 
     if (rgba.r < 16) {
       R = '0' + R;
@@ -879,7 +879,7 @@ return ((window, document, Math) => {
     }
 
     if (settings.alpha && (rgba.a < 1 || settings.forceAlpha)) {
-      var alpha = rgba.a * 255 | 0;
+      const alpha = rgba.a * 255 | 0;
       A = alpha.toString(16);
 
       if (alpha < 16) {
@@ -896,10 +896,10 @@ return ((window, document, Math) => {
    * @return {string} CSS color string.
    */
   function RGBAToStr(rgba) {
-    if (!settings.alpha || rgba.a === 1 && !settings.forceAlpha) {
-      return "rgb(" + rgba.r + ", " + rgba.g + ", " + rgba.b + ")";
+    if (!settings.alpha || (rgba.a === 1 && !settings.forceAlpha)) {
+      return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`;
     } else {
-      return "rgba(" + rgba.r + ", " + rgba.g + ", " + rgba.b + ", " + rgba.a + ")";
+      return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
     }
   }
 
@@ -909,10 +909,10 @@ return ((window, document, Math) => {
    * @return {string} CSS color string.
    */
   function HSLAToStr(hsla) {
-    if (!settings.alpha || hsla.a === 1 && !settings.forceAlpha) {
-      return "hsl(" + hsla.h + ", " + hsla.s + "%, " + hsla.l + "%)";
+    if (!settings.alpha || (hsla.a === 1 && !settings.forceAlpha)) {
+      return `hsl(${hsla.h}, ${hsla.s}%, ${hsla.l}%)`;
     } else {
-      return "hsla(" + hsla.h + ", " + hsla.s + "%, " + hsla.l + "%, " + hsla.a + ")";
+      return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`;
     }
   }
 
@@ -927,38 +927,38 @@ return ((window, document, Math) => {
     picker.setAttribute('id', 'clr-picker');
     picker.className = 'clr-picker';
     picker.innerHTML =
-    "<input id=\"clr-color-value\" name=\"clr-color-value\" class=\"clr-color\" type=\"text\" value=\"\" spellcheck=\"false\" aria-label=\"" + settings.a11y.input + "\">" + ("<div id=\"clr-color-area\" class=\"clr-gradient\" role=\"application\" aria-label=\"" +
-    settings.a11y.instruction + "\">") +
-    '<div id="clr-color-marker" class="clr-marker" tabindex="0"></div>' +
-    '</div>' +
-    '<div class="clr-hue">' + ("<input id=\"clr-hue-slider\" name=\"clr-hue-slider\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" aria-label=\"" +
-    settings.a11y.hueSlider + "\">") +
-    '<div id="clr-hue-marker"></div>' +
-    '</div>' +
-    '<div class="clr-alpha">' + ("<input id=\"clr-alpha-slider\" name=\"clr-alpha-slider\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" aria-label=\"" +
-    settings.a11y.alphaSlider + "\">") +
-    '<div id="clr-alpha-marker"></div>' +
-    '<span></span>' +
-    '</div>' +
-    '<div id="clr-format" class="clr-format">' +
-    '<fieldset class="clr-segmented">' + ("<legend>" +
-    settings.a11y.format + "</legend>") +
-    '<input id="clr-f1" type="radio" name="clr-format" value="hex">' +
-    '<label for="clr-f1">Hex</label>' +
-    '<input id="clr-f2" type="radio" name="clr-format" value="rgb">' +
-    '<label for="clr-f2">RGB</label>' +
-    '<input id="clr-f3" type="radio" name="clr-format" value="hsl">' +
-    '<label for="clr-f3">HSL</label>' +
-    '<span></span>' +
-    '</fieldset>' +
-    '</div>' +
-    '<div id="clr-swatches" class="clr-swatches"></div>' + ("<button type=\"button\" id=\"clr-clear\" class=\"clr-clear\" aria-label=\"" +
-    settings.a11y.clear + "\">" + settings.clearLabel + "</button>") +
-    '<div id="clr-color-preview" class="clr-preview">' + ("<button type=\"button\" id=\"clr-close\" class=\"clr-close\" aria-label=\"" +
-    settings.a11y.close + "\">" + settings.closeLabel + "</button>") +
-    '</div>' + ("<span id=\"clr-open-label\" hidden>" +
-    settings.a11y.open + "</span>") + ("<span id=\"clr-swatch-label\" hidden>" +
-    settings.a11y.swatch + "</span>");
+    `<input id="clr-color-value" name="clr-color-value" class="clr-color" type="text" value="" spellcheck="false" aria-label="${settings.a11y.input}">`+
+    `<div id="clr-color-area" class="clr-gradient" role="application" aria-label="${settings.a11y.instruction}">`+
+      '<div id="clr-color-marker" class="clr-marker" tabindex="0"></div>'+
+    '</div>'+
+    '<div class="clr-hue">'+
+      `<input id="clr-hue-slider" name="clr-hue-slider" type="range" min="0" max="360" step="1" aria-label="${settings.a11y.hueSlider}">`+
+      '<div id="clr-hue-marker"></div>'+
+    '</div>'+
+    '<div class="clr-alpha">'+
+      `<input id="clr-alpha-slider" name="clr-alpha-slider" type="range" min="0" max="100" step="1" aria-label="${settings.a11y.alphaSlider}">`+
+      '<div id="clr-alpha-marker"></div>'+
+      '<span></span>'+
+    '</div>'+
+    '<div id="clr-format" class="clr-format">'+
+      '<fieldset class="clr-segmented">'+
+        `<legend>${settings.a11y.format}</legend>`+
+        '<input id="clr-f1" type="radio" name="clr-format" value="hex">'+
+        '<label for="clr-f1">Hex</label>'+
+        '<input id="clr-f2" type="radio" name="clr-format" value="rgb">'+
+        '<label for="clr-f2">RGB</label>'+
+        '<input id="clr-f3" type="radio" name="clr-format" value="hsl">'+
+        '<label for="clr-f3">HSL</label>'+
+        '<span></span>'+
+      '</fieldset>'+
+    '</div>'+
+    '<div id="clr-swatches" class="clr-swatches"></div>'+
+    `<button type="button" id="clr-clear" class="clr-clear" aria-label="${settings.a11y.clear}">${settings.clearLabel}</button>`+
+    '<div id="clr-color-preview" class="clr-preview">'+
+      `<button type="button" id="clr-close" class="clr-close" aria-label="${settings.a11y.close}">${settings.closeLabel}</button>`+
+    '</div>'+
+    `<span id="clr-open-label" hidden>${settings.a11y.open}</span>`+
+    `<span id="clr-swatch-label" hidden>${settings.a11y.swatch}</span>`;
 
     // Append the color picker to the DOM
     document.body.appendChild(picker);
@@ -979,51 +979,51 @@ return ((window, document, Math) => {
     bindFields(settings.el);
     wrapFields(settings.el);
 
-    addListener(picker, 'mousedown', function (event) {
+    addListener(picker, 'mousedown', event => {
       picker.classList.remove('clr-keyboard-nav');
       event.stopPropagation();
     });
 
-    addListener(colorArea, 'mousedown', function (event) {
+    addListener(colorArea, 'mousedown', event => {
       addListener(document, 'mousemove', moveMarker);
     });
 
-    addListener(colorArea, 'touchstart', function (event) {
+    addListener(colorArea, 'touchstart', event => {
       document.addEventListener('touchmove', moveMarker, { passive: false });
     });
 
-    addListener(colorMarker, 'mousedown', function (event) {
+    addListener(colorMarker, 'mousedown', event => {
       addListener(document, 'mousemove', moveMarker);
     });
 
-    addListener(colorMarker, 'touchstart', function (event) {
+    addListener(colorMarker, 'touchstart', event => {
       document.addEventListener('touchmove', moveMarker, { passive: false });
     });
 
-    addListener(colorValue, 'change', function (event) {
+    addListener(colorValue, 'change', event => {
       if (currentEl || settings.inline) {
         setColorFromStr(colorValue.value);
         pickColor();
       }
     });
 
-    addListener(clearButton, 'click', function (event) {
+    addListener(clearButton, 'click', event => {
       pickColor('');
       closePicker();
     });
 
-    addListener(closeButton, 'click', function (event) {
+    addListener(closeButton, 'click', event => {
       pickColor();
       closePicker();
     });
 
-    addListener(document, 'click', '.clr-format input', function (event) {
+    addListener(document, 'click', '.clr-format input', event => {
       currentFormat = event.target.value;
       updateColor();
       pickColor();
     });
 
-    addListener(picker, 'click', '.clr-swatches button', function (event) {
+    addListener(picker, 'click', '.clr-swatches button', event => {
       setColorFromStr(event.target.textContent);
       pickColor();
 
@@ -1032,30 +1032,30 @@ return ((window, document, Math) => {
       }
     });
 
-    addListener(document, 'mouseup', function (event) {
+    addListener(document, 'mouseup', event => {
       document.removeEventListener('mousemove', moveMarker);
     });
 
-    addListener(document, 'touchend', function (event) {
+    addListener(document, 'touchend', event => {
       document.removeEventListener('touchmove', moveMarker);
     });
 
-    addListener(document, 'mousedown', function (event) {
+    addListener(document, 'mousedown', event => {
       keyboardNav = false;
       picker.classList.remove('clr-keyboard-nav');
       closePicker();
     });
 
-    addListener(document, 'keydown', function (event) {
-      var key = event.key;
-      var target = event.target;
-      var shiftKey = event.shiftKey;
-      var navKeys = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    addListener(document, 'keydown', event => {
+      const key = event.key;
+      const target = event.target;
+      const shiftKey = event.shiftKey;
+      const navKeys = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
       if (key === 'Escape') {
         closePicker(true);
 
-        // Display focus rings when using the keyboard
+      // Display focus rings when using the keyboard
       } else if (navKeys.includes(key)) {
         keyboardNav = true;
         picker.classList.add('clr-keyboard-nav');
@@ -1063,9 +1063,9 @@ return ((window, document, Math) => {
 
       // Trap the focus within the color picker while it's open
       if (key === 'Tab' && target.matches('.clr-picker *')) {
-        var focusables = getFocusableElements();
-        var firstFocusable = focusables.shift();
-        var lastFocusable = focusables.pop();
+        const focusables = getFocusableElements();
+        const firstFocusable = focusables.shift();
+        const lastFocusable = focusables.pop();
 
         if (shiftKey && target === firstFocusable) {
           lastFocusable.focus();
@@ -1077,7 +1077,7 @@ return ((window, document, Math) => {
       }
     });
 
-    addListener(document, 'click', '.clr-field button', function (event) {
+    addListener(document, 'click', '.clr-field button', event => {
       // Reset any previously set per-instance options
       if (hasInstance) {
         resetVirtualInstance();
@@ -1087,16 +1087,16 @@ return ((window, document, Math) => {
       event.target.nextElementSibling.dispatchEvent(new Event('click', { bubbles: true }));
     });
 
-    addListener(colorMarker, 'keydown', function (event) {
-      var movements = {
+    addListener(colorMarker, 'keydown', event => {
+      const movements = {
         ArrowUp: [0, -1],
         ArrowDown: [0, 1],
         ArrowLeft: [-1, 0],
-        ArrowRight: [1, 0] };
-
+        ArrowRight: [1, 0]
+      };
 
       if (Object.keys(movements).includes(event.key)) {
-        moveMarkerOnKeydown.apply(void 0, movements[event.key]);
+        moveMarkerOnKeydown(...movements[event.key]);
         event.preventDefault();
       }
     });
@@ -1111,8 +1111,8 @@ return ((window, document, Math) => {
    * @return {array} The list of focusable DOM elemnts.
    */
   function getFocusableElements() {
-    var controls = Array.from(picker.querySelectorAll('input, button'));
-    var focusables = controls.filter(function (node) {return !!node.offsetWidth;});
+    const controls = Array.from(picker.querySelectorAll('input, button'));
+    const focusables = controls.filter(node => !!node.offsetWidth);
 
     return focusables;
   }
@@ -1134,18 +1134,18 @@ return ((window, document, Math) => {
    * @param {function} [fn] Event handler if delegation is used.
    */
   function addListener(context, type, selector, fn) {
-    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
+    const matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
 
     // Delegate event to the target of the selector
     if (typeof selector === 'string') {
-      context.addEventListener(type, function (event) {
+      context.addEventListener(type, event => {
         if (matches.call(event.target, selector)) {
           fn.call(event.target, event);
         }
       });
 
-      // If the selector is not a string then it's a function
-      // in which case we need a regular event listener
+    // If the selector is not a string then it's a function
+    // in which case we need a regular event listener
     } else {
       fn = selector;
       context.addEventListener(type, fn);
@@ -1161,17 +1161,17 @@ return ((window, document, Math) => {
     args = args !== undefined ? args : [];
 
     if (document.readyState !== 'loading') {
-      fn.apply(void 0, args);
+      fn(...args);
     } else {
-      document.addEventListener('DOMContentLoaded', function () {
-        fn.apply(void 0, args);
+      document.addEventListener('DOMContentLoaded', () => {
+        fn(...args);
       });
     }
   }
 
   // Polyfill for Nodelist.forEach
   if (NodeList !== undefined && NodeList.prototype && !NodeList.prototype.forEach) {
-    NodeList.prototype.forEach = Array.prototype.forEach;
+      NodeList.prototype.forEach = Array.prototype.forEach;
   }
 
   //*****************************************************
