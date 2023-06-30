@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2023 Momo Bassit.
  * Licensed under the MIT License (MIT)
  * https://github.com/mdbassit/Coloris
- * Version: 0.20.0
+ * Version: 0.21.0
  * NPM: https://github.com/melloware/coloris-npm
  */
 
@@ -318,6 +318,7 @@ return ((window, document, Math, undefined) => {
 
       if (settings.focusInput || settings.selectInput) {
         colorValue.focus({ preventScroll: true });
+        colorValue.setSelectionRange(currentEl.selectionStart, currentEl.selectionEnd);
       }
       
       if (settings.selectInput) {
@@ -549,7 +550,7 @@ return ((window, document, Math, undefined) => {
       settings.onChange.call(window, color, currentEl);
     }
 
-    document.dispatchEvent(new CustomEvent('coloris:pick', { detail: { color: color, currentEl: currentEl } }));
+    document.dispatchEvent(new CustomEvent('coloris:pick', { detail: { color, currentEl } }));
   }
 
   /**
@@ -1001,9 +1002,11 @@ return ((window, document, Math, undefined) => {
     });
 
     addListener(colorValue, 'change', event => {
+      const value = colorValue.value;
+
       if (currentEl || settings.inline) {
-        setColorFromStr(colorValue.value);
-        pickColor();
+        const color = value === '' ? value : setColorFromStr(value);
+        pickColor(color);
       }
     });
 
@@ -1017,7 +1020,7 @@ return ((window, document, Math, undefined) => {
       closePicker();
     });
 
-    addListener(document, 'click', '.clr-format input', event => {
+    addListener(getEl('clr-format'), 'click', '.clr-format input', event => {
       currentFormat = event.target.value;
       updateColor();
       pickColor();
