@@ -1210,7 +1210,8 @@ return ((window, document, Math, undefined) => {
       setInstance: setVirtualInstance,
       setColor: setColor,
       removeInstance: removeVirtualInstance,
-      updatePosition: updatePickerPosition
+      updatePosition: updatePickerPosition,
+      ready: DOMReady
     };
 
     function Coloris(options) {
