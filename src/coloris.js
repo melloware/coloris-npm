@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2023 Momo Bassit.
  * Licensed under the MIT License (MIT)
  * https://github.com/mdbassit/Coloris
- * Version: 0.21.1
+ * Version: 0.22.0
  * NPM: https://github.com/melloware/coloris-npm
  */
 
