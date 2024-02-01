@@ -4,6 +4,12 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    groups:
+      # This is the name of your group, it will be used in PR titles and branch names
+      dev-dependencies:
+        patterns:
+          - "@babel*"  # Babel
+          - "gul*"  # Gulp
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
