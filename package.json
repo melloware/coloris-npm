@@ -16,10 +16,7 @@
       "require": "./dist/umd/coloris.js",
       "types": "./dist/coloris.d.ts"
     },
-    "./dist/coloris.css": {
-      "import": "./dist/coloris.css",
-      "require": "./dist/coloris.css"
-    }
+    "./dist/coloris.css": "./dist/coloris.css"
   },
   "types": "dist/coloris.d.ts",
   "files": [
