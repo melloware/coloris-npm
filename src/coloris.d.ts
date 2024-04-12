@@ -150,7 +150,7 @@ declare namespace Coloris {
    */
   interface ColorisVirtualInstanceOptions { 
     /**
-     * CSS selector for the parent.
+     * CSS selector for the parent or a DOM element or a list of DOM elements.
      *
      * The default behavior is to append the color picker's dialog to the end of the document's
      * body. but it is possible to append it to a custom parent instead. This is especially useful
@@ -160,7 +160,7 @@ declare namespace Coloris {
      *
      * @default null
      */
-    parent?: null | string;
+    parent?: null | string| HTMLElement | HTMLElement[];
       
     /**
      * The color theme to use for the color picker. More themes might be added
@@ -306,9 +306,9 @@ declare namespace Coloris {
 
     /**
      * A custom CSS selector to bind the color picker to. This must point to
-     * one or more {@link HTMLInputElement}s.
+     * one or more {@link HTMLInputElement}s or a DOM element or a list of DOM elements.
      */
-    el: string;
+    el: string | HTMLElement | HTMLElement[];
   
     /**
      * Set to `true` to use the color picker as an inline widget. In this mode the color picker is
