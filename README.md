@@ -1,6 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/@melloware%2Fcoloris.svg)](https://badge.fury.io/js/@melloware%2Fcoloris)
 ![Maven](https://img.shields.io/maven-central/v/org.webjars.npm/melloware__coloris)
+![NPM Downloads](https://img.shields.io/npm/dm/@melloware%2Fcoloris?color=purple)
 [![@melloware/coloris](https://snyk.io/advisor/npm-package/@melloware/coloris/badge.svg)](https://snyk.io/advisor/npm-package/@melloware/coloris)
 
 # Coloris NPM
