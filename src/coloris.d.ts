@@ -49,9 +49,10 @@ declare namespace Coloris {
    * A function that is called whenever a new color is picked.
    * 
    * @param color The newly selected color, as a CSS color string.
+   * @param currentEl The current HTML element to which the Coloris colorpicker is attached, if any. 
    * @since 0.18.0
    */
-  type OnChangeCallback = (color: string) => void;
+  type OnChangeCallback = (color: string, currentEl: HTMLElement | undefined) => void;
 
   interface Accessibility {
     /**
