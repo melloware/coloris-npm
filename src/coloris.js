@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2024 Momo Bassit.
  * Licensed under the MIT License (MIT)
  * https://github.com/mdbassit/Coloris
- * Version: 0.24.0
+ * Version: 0.25.0
  * NPM: https://github.com/melloware/coloris-npm
  */
 
@@ -367,7 +367,7 @@ return ((window, document, Math, undefined) => {
     }
 
     // Trigger an "open" event
-    currentEl.dispatchEvent(new Event('open', { bubbles: true }));
+    currentEl.dispatchEvent(new Event('open', { bubbles: false }));
   }
 
   /**
@@ -535,7 +535,7 @@ return ((window, document, Math, undefined) => {
       }
 
       // Trigger a "close" event
-      prevEl.dispatchEvent(new Event('close', { bubbles: true }));
+      prevEl.dispatchEvent(new Event('close', { bubbles: false }));
 
       if (settings.focusInput) {
         prevEl.focus({ preventScroll: true });
@@ -1108,6 +1108,12 @@ return ((window, document, Math, undefined) => {
 
       if (key === 'Escape') {
         closePicker(true);
+        return;
+
+      // Close the color picker and keep the selected color on press on Enter
+      } else if (key === 'Enter' && target.tagName !== 'BUTTON') {
+        closePicker();
+        return;
 
       // Display focus rings when using the keyboard
       } else if (navKeys.includes(key)) {
