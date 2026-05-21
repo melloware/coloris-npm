@@ -1,21 +1,25 @@
-name: Publish Package to npmjs
+name: Publish Package
+
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - '*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v6
-      # Setup .npmrc file to publish to npm
+
       - uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false  # never use caching in release builds
       - run: npm ci
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm run build --if-present
+      - run: npm publish  # Or: npm stage publish
