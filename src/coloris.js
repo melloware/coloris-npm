@@ -345,7 +345,7 @@ return ((window, document, Math, undefined) => {
     attachVirtualInstance(event.target);
 
     currentEl = event.target;
-    oldColor = currentEl.value;
+    oldColor = currentEl.value ? currentEl.value : '#ffffff00';
     currentFormat = getColorFormatFromStr(oldColor);
     picker.classList.add('clr-open');
     
