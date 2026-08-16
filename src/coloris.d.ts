@@ -309,7 +309,7 @@ declare namespace Coloris {
      * A custom CSS selector to bind the color picker to. This must point to
      * one or more {@link HTMLInputElement}s or a DOM element or a list of DOM elements.
      */
-    el: string | HTMLElement | HTMLElement[];
+    el?: string | HTMLElement | HTMLElement[];
   
     /**
      * Set to `true` to use the color picker as an inline widget. In this mode the color picker is
