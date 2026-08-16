@@ -58,7 +58,7 @@ About the code you contribute
 
 ### Detailed code quality standards:
   
-  - All your code should compile and run in **Node 16.x or higher**.
+  - All your code should compile and run in **Node 24.x or higher**.
   - All comments, names of classes and variables, log messages, etc. must be **in English**.
 
   

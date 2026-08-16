@@ -167,6 +167,7 @@ async function spawnSimple(command, args, cwd) {
     stdio: ["inherit", "inherit", "inherit"],
     env: process.env,
     cwd: cwd,
+    shell: process.platform === "win32",
   });
   if (error) {
     throw error;
@@ -181,19 +182,8 @@ async function spawnSimple(command, args, cwd) {
  * @param {string} cwd
  */
 async function spawnNpm(args, cwd) {
-  console.log(` > Running yarn ${args.join(" ")}`);
-  try {
-    await spawnSimple("npm", args, cwd);
-  }
-  catch (e) {
-    if (e.code === "ENOENT") {
-      console.info("npm not found, using npm.cmd");
-      await spawnSimple("npm.cmd", args, cwd);
-    }
-    else {
-      throw e;
-    }
-  }
+  console.log(` > Running npm ${args.join(" ")}`);
+  await spawnSimple("npm", args, cwd);
 }
 
 /**
@@ -202,18 +192,7 @@ async function spawnNpm(args, cwd) {
  */
 async function spawnYarn(args, cwd) {
   console.log(` > Running yarn ${args.join(" ")}`);
-  try {
-    await spawnSimple("yarn", args, cwd);
-  }
-  catch (e) {
-    if (e.code === "ENOENT") {
-      console.info("yarn not found, using yarn.cmd");
-      await spawnSimple("yarn.cmd", args, cwd);
-    }
-    else {
-      throw e;
-    }
-  }
+  await spawnSimple("yarn", args, cwd);
 }
 
 /**

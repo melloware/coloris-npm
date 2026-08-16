@@ -1,5 +1,7 @@
 // @ts-check
 
+import { fileURLToPath } from "url";
+
 import umdHelper from "../umd/helper.js";
 
 /**
@@ -7,8 +9,7 @@ import umdHelper from "../umd/helper.js";
  * @returns {string}
  */
 export function getDirname(importMeta) {
-  const dirUrl = new URL(".", importMeta.url);
-  return dirUrl.pathname;
+  return fileURLToPath(new URL(".", importMeta.url));
 }
 
 export const clean = umdHelper.clean;

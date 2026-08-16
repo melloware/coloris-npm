@@ -3,6 +3,7 @@
 import fs from "fs";
 import { createRequire } from "module";
 import path from "path";
+import { pathToFileURL } from "url";
 
 import { spawnNpm, existsDir, getDirname } from "./helper.js";
 
@@ -64,18 +65,18 @@ async function runTestScript(path) {
     if (typeof test.main !== "function") {
       throw new Error("Test does not expose a main function");
     }
-    test.main();
+    await test.main();
   }
   else if (path.endsWith(".mjs")) {
     console.log(`Loading test script ${path} via import...`);
-    const test = await import(path);
+    const test = await import(pathToFileURL(path).href);
     if (test === null || typeof test !== "object") {
       throw new Error("Test does not expose an export");
     }
     if (typeof test.main !== "function") {
       throw new Error("Test does not expose a main function");
     }
-    test.main();
+    await test.main();
   }
   else {
     throw new Error(`Unknown test script ${path}`);
