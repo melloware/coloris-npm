@@ -369,6 +369,30 @@ declare namespace Coloris {
   function updatePosition(): void;
 
   /**
+   * Updates the color picker configuration at runtime.
+   * This is the `set` method exposed on the Coloris object.
+   */
+  function set(opts: ColorisOptions): void;
+
+  /**
+   * Wraps one or more input fields in a div that adds a color preview.
+   * This is the `wrap` method exposed on the Coloris object.
+   */
+  function wrap(selector: string | HTMLElement | HTMLElement[]): void;
+
+  /**
+   * Sets the color on the given element and picks it.
+   * This is the `setColor` method exposed on the Coloris object.
+   */
+  function setColor(color: string, target: HTMLElement): void;
+
+  /**
+   * Calls the given function when the DOM is ready.
+   * This is the `ready` method exposed on the Coloris object.
+   */
+  function ready(fn: () => void): void;
+
+  /**
    * Converts an input field to a color picker input.
    */
   function coloris(opts: ColorisOptions): void;
