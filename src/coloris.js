@@ -596,7 +596,7 @@ return ((window, document, Math, undefined) => {
   function pickColor(color) {
     color = color !== undefined ? color : colorValue.value;
 
-    if (currentEl) {
+    if (currentEl && !currentEl.disabled) {
       currentEl.value = color;
       currentEl.dispatchEvent(new Event('input', { bubbles: true }));
     }
